@@ -70,23 +70,21 @@ const RegisterForm = (props) => {
                          {errors.firstName && touched.firstName && <p>{errors.firstName}</p>}
                 
                          <label htmlFor="lastName" className="col-sm-2 col-form-label">Apellido</label>
-                         <Field  id='lastName' type="text" placeholder="Last name" className="form-control" name='lastName'/>
+                         <Field  id='lastName' type="text" placeholder="Apellido" className="form-control" name='lastName'/>
                          {errors.lastName && touched.lastName && <p>{errors.lastName}</p>}
     
-                         <label htmlFor="email" className="col-sm-2 col-form-label">Correo Electrónico</label>
+                         <label htmlFor="email" className="col-form-label">Correo Electrónico</label>
                          <Field id='email' type="text" placeholder="Email" className="form-control" name='email'/>
                          <ErrorMessage name="email">{(msg) => <p>{msg}</p>}</ErrorMessage>
 
                          <label htmlFor="password" className="col-sm-2 col-form-label">Contraseña</label>
-                         <Field  id='password' type="password" placeholder="Password" className="form-control" name='password'/>
+                         <Field  id='password' type="password" placeholder="Contraseña" className="form-control" name='password'/>
                          {errors.password && touched.password && <p>{errors.password}</p>}
 
-                         <label htmlFor="confirmPassword" className="col-sm-2 col-form-label">Confirmar Contraseña</label>
-                         <Field  id='confirmPassword' type="password" placeholder="Confirmar password" className="form-control" name='confirmPassword'/>
+                         <label htmlFor="confirmPassword" className="col-form-label">Confirmar Contraseña</label>
+                         <Field  id='confirmPassword' type="password" placeholder="Confirmar Contraseña" className="form-control" name='confirmPassword'/>
                          {errors.confirmPassword && touched.confirmPassword && <p>{errors.confirmPassword}</p>}
-                        <hr>
-                        </hr>
-    
+    <br></br>
                         <button type="submit" disabled={Object.values(errors).length > 0}>Registrarse</button>
                 </Form>
                 </div>

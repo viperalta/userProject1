@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require('bcrypt');
+var uniqueValidator = require('mongoose-unique-validator');
 
 const UserSchema = new mongoose.Schema(
   {
@@ -18,6 +19,7 @@ const UserSchema = new mongoose.Schema(
         validator: (val) => /^([\w-\.]+@([\w-]+\.)+[\w-]+)?$/.test(val),
         message: "Please enter a valid email",
       },
+      unique:true
     },
     password: {
       type: String,
@@ -28,6 +30,7 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+UserSchema.plugin(uniqueValidator,{ message: 'Error, {PATH} ya existe' });
 
 UserSchema.virtual("confirmPassword")
   .get(() => this._confirmPassword)

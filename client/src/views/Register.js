@@ -15,7 +15,7 @@ const Register = () => {
     const [errors, setErrors] = useState([]); 
 
     const registerUser = user => {
-        axios.post('http://localhost:8000/api/register', user)
+        axios.post('/api/register', user)
             .then(res=>{
                 console.log(res.data);
                 //history.push("/");

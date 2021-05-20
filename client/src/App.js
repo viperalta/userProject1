@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import "./App.css";
 import LoginForm from "./components/LoginForm";
+import All from "./views/All";
 import Login from "./views/Login";
 import Register from "./views/Register";
 
@@ -22,6 +23,9 @@ function App() {
           <li>
             <Link to="/register">Registro</Link>
           </li>
+          <li>
+            <Link to="/all">All</Link>
+          </li>
         </ul>
       </nav>
 
@@ -32,6 +36,9 @@ function App() {
           </Route>
           <Route path="/register">
             <Register />
+          </Route>
+          <Route path="/all">
+            <All />
           </Route>
           <Route path="/">
             <h3>Probando login y registro</h3>

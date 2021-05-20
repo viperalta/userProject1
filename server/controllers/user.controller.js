@@ -1,42 +1,69 @@
 const { User } = require("../models/user.model");
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
-module.exports.Register = (req, res) => {
-  const user = new User(req.body);
-  user
-    .save()
-    .then(() => {
-      res.json({ msg: "success!", user: user });
-    })
-    .catch((err) => res.status(400).json(err));
+module.exports.Register = async (req, res) => {
+  try {
+    const user = new User(req.body);
+    await user.save();
+
+    const jwtToken = jwt.sign({ _id: user._id }, process.env.SECRET_KEY);
+
+    return res
+      .cookie("usertoken", jwtToken, process.env.SECRET_KEY, {
+        httpOnly: true,
+      })
+      .json({ email: user.email, _id: user._id });
+  } 
+  catch (err) {
+    res
+      .status(400)
+      .json(err);
+  }
 };
 
-module.exports.Login = (req, res) => {
-  User.findOne({ email: req.body.email })
-    .then((user) => {
-      if (user === null) {
-        res.json({ msg: "invalid login attempt 1" });
-      } else {
-        bcrypt
-          .compare(req.body.password, user.password)
-          .then((passwordIsValid) => {
-            if (passwordIsValid) {
-              const newJWT = jwt.sign({
-                _id: user._id,
-              });
-              const secret = "keepThisSecret";
-              res
-                .cookie("usertoken", newJWT, secret, {
-                  httpOnly: true,
-                })
-                .json({ msg: "success!" });
-            } else {
-              res.json({ msg: "invalid login attempt 2" });
-            }
-          })
-          .catch((err) => res.json({ msg: "invalid login attempt 3" }));
-      }
+module.exports.Login = async (req, res) => {
+  try{
+    const user = await User.findOne({ email: req.body.email });
+
+  if (user === null) {
+    // email not found in users collection
+    res.status(400).json({  errors: { error: { message: 'El usuario no existe' } }, });
+  }
+
+  const correctPassword = await bcrypt.compare(
+    req.body.password,
+    user.password
+  );
+
+  if (!correctPassword) {
+    res.status(400).json({  errors: { error: { message: 'La contraseña es incorrecta' } }, });
+  }
+
+  const userToken = jwt.sign(
+    {
+      id: user._id,
+    },
+    process.env.SECRET_KEY
+  );
+ 
+  res
+    .cookie("usertoken", userToken, process.env.SECRET_KEY, {
+      httpOnly: true,
     })
-    .catch((err) => res.json(err));
+    .json({ msg: "success!" });
+
+  }
+  catch (err) {
+    res
+      .status(400)
+      .json(err);
+  }
+  
 };
+
+module.exports.getAll=(request,response)=>{
+  User.find({})
+  .then(users=>response.json(users))
+  .catch(err=>response.json(err))
+}
